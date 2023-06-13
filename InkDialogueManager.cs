@@ -14,7 +14,7 @@ public class InkDialogueManager : MonoBehaviour
 
     //Ink file assest
     [SerializeField]
-    [Header("°ÑInk JsonÎÄ¼ş·ÅÔÚÕâÀï Put the Json File here")]
+    [Header("æŠŠInk Jsonæ–‡ä»¶æ”¾åœ¨è¿™é‡Œ Put the Json File here")]
     private TextAsset inkJSONAsset = null;
     // The story class generated from the json file
     public Story story;
@@ -79,15 +79,15 @@ public class InkDialogueManager : MonoBehaviour
         
         if (story.canContinue)
         {
-
+            choiceBox.gameObject.SetActive(false);
             string text = story.Continue();
-            //É¾³ıÊÕÎ²µÄ¿Õ¸ñ
+            //åˆ é™¤æ”¶å°¾çš„ç©ºæ ¼
             // This removes any white space from the text.
             text = text.Trim();
-            //ÕÒµ½ÕâÒ»ĞĞµÄtags
+            //æ‰¾åˆ°è¿™ä¸€è¡Œçš„tags
             //Find the tags of this line
             List<string> tags = story.currentTags;
-            // ½«ÎÄ×Ö´òÓ¡³öÀ´
+            // å°†æ–‡å­—æ‰“å°å‡ºæ¥
             // Display the text on screen!
             PrintContent(text,tags);
         }
@@ -123,9 +123,9 @@ public class InkDialogueManager : MonoBehaviour
 
     public void PrintContent(string content, List<string> tags)
     {
-        /*ÖØÒªµÄ¹æÔò Important rules
+        /*é‡è¦çš„è§„åˆ™ Important rules
          * 1. #CHAR:A:Happy 
-         * ½ÇÉ«A ¿ªĞÄµÄÁ¢»æ
+         * è§’è‰²A å¼€å¿ƒçš„ç«‹ç»˜
          * Show Character A happy image
          * 2.#POS:0
          * 0-left,1-centre,2-right
@@ -166,7 +166,7 @@ public class InkDialogueManager : MonoBehaviour
                 characterPos = Int32.Parse(tagSplit[1]);
             }
         }
-        //¸Ä±ä½ÇÉ«Á¢»æ
+        //æ”¹å˜è§’è‰²ç«‹ç»˜
         if (characterImage != null)
         {
             if (charactersPos.Contains(characterName))
@@ -188,13 +188,13 @@ public class InkDialogueManager : MonoBehaviour
             characterNameBox.gameObject.SetActive(false);
         }
 
-        //¸Ä±ä¶Ô»°¿òÄÚÎÄ×Ö Change text
+        //æ”¹å˜å¯¹è¯æ¡†å†…æ–‡å­— Change text
         dialogueBoxText.GetComponent<TMP_Text>().text = content;
         LogText.GetComponent<TMP_Text>().text+= "<color=red>"+characterName + "</color=red>"+"    " + content+ " <br>";
     }
    
 
-    //°´choiceºó
+    //æŒ‰choiceå
     // after press choice
     void OnClickChoiceButton(Choice choice)
     {
@@ -205,7 +205,7 @@ public class InkDialogueManager : MonoBehaviour
     [Serializable]
     public class AllExpressions
     {
-        //½ÇÉ«Ãû×Ö character Name
+        //è§’è‰²åå­— character Name
         public string characterName;
         public Expression[] expressions;
 
@@ -213,13 +213,13 @@ public class InkDialogueManager : MonoBehaviour
     [Serializable]
     public class Expression
     {
-        //±íÇé expression
+        //è¡¨æƒ… expression
         public string expression;
-        //Í¼Æ¬ sprite
+        //å›¾ç‰‡ sprite
         public Sprite img;
 
     }
-# region ´æµµ SL
+# region å­˜æ¡£ SL
     public string SaveInk()
     {
         string savedJson = story.state.ToJson();
@@ -238,9 +238,16 @@ public class InkDialogueManager : MonoBehaviour
         File.WriteAllText(savePath + "01.json", json);
 
 
+
     }
     public void OnLoad()
     {
+        for (int i = 0; i < charactersPos.Count; i++)
+        {
+            charactersPos[i] = "";
+            characterImages[i].gameObject.SetActive(false);
+        }
+        LogText.GetComponent<TMP_Text>().text = "";
         string json = File.ReadAllText(savePath + "01.json");
         LoadInk(json);
         ContinueStory() ;
@@ -251,7 +258,7 @@ public class InkDialogueManager : MonoBehaviour
 
     }
     #endregion
-    #region RPGÓÎÏ·×¨ÓÃ
+    #region RPGæ¸¸æˆä¸“ç”¨
     public void OnCheck()
     {
 
@@ -265,7 +272,7 @@ public class InkDialogueManager : MonoBehaviour
             {
                 if (isFind)
                 {
-                    Debug.Log("BUG£º²»ÄÜÓĞÖØ¸´µÄÑ¡Ïî¡ª¡ª" + ChoiceText);
+                    Debug.Log("BUGï¼šä¸èƒ½æœ‰é‡å¤çš„é€‰é¡¹â€”â€”" + ChoiceText);
                     break;
 
                 }
@@ -276,7 +283,7 @@ public class InkDialogueManager : MonoBehaviour
 
         if (!isFind)
         {
-            Debug.Log("Warning£ºÑ¡Ïî²»´æÔÚ" + ChoiceText);
+            Debug.Log("Warningï¼šé€‰é¡¹ä¸å­˜åœ¨" + ChoiceText);
         }
         else
         {
